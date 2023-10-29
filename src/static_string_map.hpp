@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <array>
+#include <optional>
 #include <string_view>
 #include <utility>
 
@@ -10,6 +11,7 @@ public:
 	using entry_t = std::pair<str_t, str_t>;
 	using map_t = std::array<entry_t, N>;
 	using it_t = typename map_t::const_iterator;
+	using find_t = std::optional<str_t>;
 
 	// Mimic std::map's size functions
 	static constexpr std::size_t size = N;
@@ -29,22 +31,22 @@ public:
 	constexpr explicit static_string_map(const map_t& map) : sorted_map{sort_map(map)} {}
 	constexpr explicit static_string_map(const entry_t (&&entries)[N]) : static_string_map{std::to_array(entries)} {}
 
-	[[nodiscard]] constexpr std::pair<bool, it_t> find(str_t key) const {
+	[[nodiscard]] constexpr find_t find(str_t key) const {
 		const it_t begin = sorted_map.cbegin();
 		const it_t end = sorted_map.end();
 
 		const it_t result =
 		    std::lower_bound(begin, end, key, [](const entry_t& a, const std::string_view& b) { return a.first < b; });
 
-		return std::make_pair((result != end) && (result->first == key), result);
+		return (result != end) && (result->first == key) ? std::make_optional(result->second) : std::nullopt;
 	}
 
 	[[nodiscard]] constexpr str_t at(str_t key) const {
-		const std::pair<bool, it_t> search_result = find(key);
+		const find_t search_result = find(key);
 
-		if (search_result.first) [[likely]] {
+		if (search_result) [[likely]] {
 			// Found key
-			return search_result.second->second;
+			return *search_result;
 		} else {
 			using namespace std::literals::string_literals;
 			// Key not found
@@ -53,7 +55,7 @@ public:
 	}
 
 	[[nodiscard]] constexpr bool contains(str_t key) const {
-		return find(key).first;
+		return find(key).has_value();
 	}
 
 	[[nodiscard]] constexpr str_t operator[](str_t key) const {

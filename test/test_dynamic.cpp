@@ -34,8 +34,8 @@ TEST(TestDynamic, Find) {
 	const auto hello = map.find("hello");
 	const auto hi = map.find("hi");
 
-	EXPECT_TRUE(hello.first);
-	EXPECT_EQ(hello.second->second, "world");
+	EXPECT_TRUE(hello);
+	EXPECT_EQ(*hello, "world");
 
-	EXPECT_FALSE(hi.first);
+	EXPECT_FALSE(hi);
 }
