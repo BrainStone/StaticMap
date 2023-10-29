@@ -10,6 +10,8 @@ public:
 	using entry_t = std::pair<str_t, str_t>;
 	using map_t = std::array<entry_t, N>;
 
+	static constexpr std::size_t size = N;
+
 private:
 	const map_t sorted_map;
 
@@ -22,7 +24,6 @@ private:
 public:
 	constexpr explicit static_string_map(const map_t& map) : sorted_map{sort_map(map)} {}
 	constexpr explicit static_string_map(const entry_t (&&entries)[N]) : static_string_map{std::to_array(entries)} {}
-	constexpr explicit static_string_map(const entry_t (&entries)[N]) : static_string_map{std::to_array(entries)} {}
 
 	[[nodiscard]] constexpr str_t get(str_t key) const {
 		const typename map_t::const_iterator begin = sorted_map.cbegin();
