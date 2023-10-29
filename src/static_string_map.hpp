@@ -20,8 +20,6 @@ public:
 
 private:
 	const map_t sorted_map;
-	const it_t map_begin;
-	const it_t map_end;
 
 	static constexpr map_t sort_map(map_t unsorted_map) {
 		std::sort(unsorted_map.begin(), unsorted_map.end());
@@ -30,15 +28,17 @@ private:
 	}
 
 public:
-	constexpr explicit static_string_map(const map_t& map)
-	    : sorted_map{sort_map(map)}, map_begin{sorted_map.cbegin()}, map_end{sorted_map.cend()} {}
+	constexpr explicit static_string_map(const map_t& map) : sorted_map{sort_map(map)} {}
 	constexpr explicit static_string_map(const entry_t (&&entries)[N]) : static_string_map{std::to_array(entries)} {}
 
 	[[nodiscard]] constexpr find_t find(str_t key) const {
-		const it_t result = std::lower_bound(map_begin, map_end, key,
-		                                     [](const entry_t& a, const std::string_view& b) { return a.first < b; });
+		const it_t begin = sorted_map.cbegin();
+		const it_t end = sorted_map.cend();
 
-		if ((result != map_end) && (result->first == key)) [[likely]] {
+		const it_t result =
+		    std::lower_bound(begin, end, key, [](const entry_t& a, const std::string_view& b) { return a.first < b; });
+
+		if ((result != end) && (result->first == key)) [[likely]] {
 			return std::make_optional(result->second);
 		} else {
 			return std::nullopt;
