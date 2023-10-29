@@ -8,6 +8,7 @@ jobs:
     build:
         # Make sure this builds on a wide variety of systems
         strategy:
+            fail-fast: false
             matrix:
                 build_type:
                     - Release
