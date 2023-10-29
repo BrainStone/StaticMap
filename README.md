@@ -42,19 +42,19 @@ FetchContent_Declare(
         GIT_TAG v2.0.0
 )
 
-FetchContent_MakeAvailable(static_string_map)
+FetchContent_MakeAvailable(static_map)
 
-# Use static_string_map
+# Use static_map
 project(${PROJECT_NAME} CXX)
-target_link_libraries(${PROJECT_NAME} PRIVATE static_string_map)
+target_link_libraries(${PROJECT_NAME} PRIVATE static_map)
 ```
 
 ### Without CMake
 
 Essentially you have two options:
 
-- Add `$static_string_map_base_path/src` to your include paths.
-- Copy `src/static_string_map.hpp` into an already in use include path.
+- Add `$static_map_base_path/src` to your include paths.
+- Copy `src/static{,_string}_map.hpp` into an already in use include path.
 
 ## Building
 
