@@ -1,3 +1,6 @@
+#ifndef STATIC_MAP__STATIC_MAP_HPP
+#define STATIC_MAP__STATIC_MAP_HPP
+
 #include <algorithm>
 #include <array>
 #include <concepts>
@@ -136,3 +139,8 @@ public:
 		return at(key);
 	}
 };
+
+// Cleanup just in case
+#undef STATIC_MAP_TYPEDEFS
+
+#endif #ifndef STATIC_MAP__STATIC_MAP_HPP
