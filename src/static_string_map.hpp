@@ -33,12 +33,16 @@ public:
 
 	[[nodiscard]] constexpr find_t find(str_t key) const {
 		const it_t begin = sorted_map.cbegin();
-		const it_t end = sorted_map.end();
+		const it_t end = sorted_map.cend();
 
 		const it_t result =
 		    std::lower_bound(begin, end, key, [](const entry_t& a, const std::string_view& b) { return a.first < b; });
 
-		return (result != end) && (result->first == key) ? std::make_optional(result->second) : std::nullopt;
+		if ((result != end) && (result->first == key)) [[likely]] {
+			return std::make_optional(result->second);
+		} else {
+			return std::nullopt;
+		}
 	}
 
 	[[nodiscard]] constexpr str_t at(str_t key) const {
