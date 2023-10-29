@@ -37,7 +37,7 @@ add_executable(${PROJECT_NAME} ${test_sources})
 gtest_discover_tests(${PROJECT_NAME} XML_OUTPUT_DIR ${CMAKE_BINARY_DIR}/reports)
 
 # Link test executable against gtest & gtest_main
-target_link_libraries(${PROJECT_NAME} PRIVATE gtest gtest_main static_string_map)
+target_link_libraries(${PROJECT_NAME} PRIVATE gtest gtest_main static_map)
 
 # Be very strict with compiling
 if (MSVC)
