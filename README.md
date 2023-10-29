@@ -11,8 +11,7 @@ question for `static_string_map` are `std::string_view` strings for maximum effi
 ```cpp
 #include "static_string_map.hpp"
 
-// static_string_map is static_map<std::string_view, std::string_view>
-constexpr static_string_map messages{{{"hi", "hi"}, {"foo", "bar"}}};
+constexpr static_map messages = make_static_string_map({{"hi", "hi"}, {"foo", "bar"}});
 constexpr std::string_view constexpr_message = messages["foo"]; // Initialized to "bar"
 constexpr std::string_view constexpr_message = messages["xxx"]; // Compile error
 

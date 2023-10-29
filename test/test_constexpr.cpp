@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 #include "static_string_map.hpp"
 
-constexpr static_string_map map{{{"hello", "world"}, {"foo", "bar"}}};
+constexpr static_map map = make_static_string_map({{"hello", "world"}, {"foo", "bar"}});
 
 TEST(TestConstexpr, Initialization) {
-	constexpr static_string_map local_map{{{"hello", "world"}, {"foo", "bar"}}};
+	constexpr static_map local_map = make_static_string_map({{"hello", "world"}, {"foo", "bar"}});
 
 	EXPECT_EQ(local_map.size(), 2);
 	EXPECT_EQ(local_map.max_size(), local_map.size());

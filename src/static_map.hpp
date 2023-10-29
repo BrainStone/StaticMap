@@ -106,7 +106,7 @@ private:
 
 public:
 	constexpr explicit static_map(const map_t& map) : map{map} {}
-	constexpr explicit static_map(const entry_t (&&entries)[N]) : static_map{std::to_array(entries)} {}
+	constexpr explicit static_map(const entry_t (&entries)[N]) : static_map{std::to_array(entries)} {}
 
 	[[nodiscard]] constexpr find_t find(const key_t& key) const {
 		return map.find(key);
@@ -134,7 +134,12 @@ public:
 	}
 };
 
+template <std::equality_comparable K, typename V, std::size_t N>
+constexpr static_map<K, V, N> make_static_map(const typename static_map<K, V, N>::entry_t (&entries)[N]) {
+	return static_map<K, V, N>{entries};
+};
+
 // Cleanup just in case
 #undef STATIC_MAP_TYPEDEFS
 
-#endif // #ifndef STATIC_MAP_STATIC_MAP_HPP
+#endif  // #ifndef STATIC_MAP_STATIC_MAP_HPP
