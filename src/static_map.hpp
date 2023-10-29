@@ -16,9 +16,17 @@ public:
 	using find_t = std::optional<V>;
 
 	// Mimic std::map's size functions
-	static constexpr std::size_t size = N;
-	static constexpr std::size_t max_size = size;
-	static constexpr bool empty = (size == 0);
+	static constexpr std::size_t size() {
+		return N;
+	}
+
+	static constexpr std::size_t max_size() {
+		return size();
+	}
+
+	static constexpr bool empty() {
+		return size() == 0;
+	};
 
 private:
 	const map_t sorted_map;
