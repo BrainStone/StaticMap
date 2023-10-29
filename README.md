@@ -1,17 +1,17 @@
-# StaticStringMap
+# StaticMap
 
-A compile time static string map for C++20 or above.
+A compile time static map for C++20 or above.
 
-This nifty little library offers the class `static_string_map`, which is a class that can store a string to string
-mapping
-at compile time, including retrieving the values at compile time. The strings in question are `std::string_view` strings
-for maximum efficiency.
+This nifty little library offers the class `static_map` and the convenient alias `static_string_map`, which is a class
+that can store a key value mapping at compile time, including retrieving the values at compile time. The strings in
+question for `static_string_map` are `std::string_view` strings for maximum efficiency.
 
 ## Usage Example
 
 ```cpp
 #include "static_string_map.hpp"
 
+// static_string_map is static_map<std::string_view, std::string_view>
 constexpr static_string_map messages{{{"hi", "hi"}, {"foo", "bar"}}};
 constexpr std::string_view constexpr_message = messages["foo"]; // Initialized to "bar"
 constexpr std::string_view constexpr_message = messages["xxx"]; // Compile error
@@ -37,9 +37,9 @@ You can use the `FetchContent` module to let CMake download the lib for you:
 # Download stomfoolery
 include(FetchContent)
 FetchContent_Declare(
-        static_string_map
-        GIT_REPOSITORY https://github.com/BrainStone/StaticStringMap.git
-        GIT_TAG v1.0.0
+        static_map
+        GIT_REPOSITORY https://github.com/BrainStone/StaticMap.git
+        GIT_TAG v2.0.0
 )
 
 FetchContent_MakeAvailable(static_string_map)
