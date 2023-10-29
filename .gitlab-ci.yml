@@ -1,0 +1,71 @@
+# Basics/global stuff
+stages:
+    - build
+    - test
+
+default:
+    tags:
+        - shell
+        - linux
+
+variables:
+    CMAKE_COLOR_MAKEFILE: "ON"
+    COLOR: "always"
+
+# Template Jobs
+.release:
+    variables:
+        BUILD_TYPE: Release
+    needs:
+        - build:release
+
+.debug:
+    variables:
+        BUILD_TYPE: Debug
+    needs:
+        - build:debug
+
+.build:
+    stage: build
+    needs: []
+    script:
+        - cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        - cmake --build build --config $BUILD_TYPE
+    artifacts:
+        expire_in: 10 mins
+        paths:
+            - build/*
+
+.test:
+    stage: test
+    script:
+        - cd build
+        - ctest -C $BUILD_TYPE
+    allow_failure: true
+    artifacts:
+        when: always
+        paths:
+            - build/reports/**/*.xml
+        reports:
+            junit: build/reports/**/*.xml
+
+# Jobs
+build:release:
+    extends:
+        - .release
+        - .build
+
+build:debug:
+    extends:
+        - .debug
+        - .build
+
+test:release:
+    extends:
+        - .release
+        - .test
+
+test:debug:
+    extends:
+        - .debug
+        - .test

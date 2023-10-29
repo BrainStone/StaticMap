@@ -1,0 +1,35 @@
+name: 'Test Report'
+
+on:
+    workflow_run:
+        workflows: [ 'CMake' ]
+        types:
+            - completed
+
+# Permissions required
+permissions:
+    id-token: write
+    contents: read
+    checks: write
+
+jobs:
+    report:
+        # Doesn't matter what OS we used to build
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                build_type:
+                    - Release
+                    - Debug
+                os:
+                    - ubuntu-latest
+                    - windows-latest
+
+        steps:
+            -   uses: dorny/test-reporter@v1
+                with:
+                    artifact: test-results_${{ matrix.build_type }}_${{ matrix.os }}
+                    name: GTest Tests
+                    path: '**/*.xml'
+                    reporter: java-junit

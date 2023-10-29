@@ -1,0 +1,45 @@
+name: CMake
+
+on:
+    - push
+    - pull_request
+
+jobs:
+    build:
+        # Make sure this builds on a wide variety of systems
+        strategy:
+            matrix:
+                build_type:
+                    - Release
+                    - Debug
+                os:
+                    - ubuntu-latest
+                    - windows-latest
+
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            -   uses: actions/checkout@v3
+
+            -   name: Configure CMake
+                  # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+                # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+                run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+            -   name: Build
+                # Build your program with the given configuration
+                run: cmake --build ${{github.workspace}}/build --config ${{ matrix.build_type }} -j "$(nproc --all)"
+
+            -   name: Test
+                working-directory: ${{github.workspace}}/build
+                  # Execute tests defined by the CMake configuration.
+                # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+                run: ctest -C ${{ matrix.build_type }}
+                continue-on-error: true
+
+            # upload test results
+            -   uses: actions/upload-artifact@v3
+                if: success() || failure()
+                with:
+                    name: test-results_${{ matrix.build_type }}_${{ matrix.os }}
+                    path: build/reports/**/*.xml
