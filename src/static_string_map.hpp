@@ -9,6 +9,7 @@ public:
 	using str_t = std::basic_string_view<C>;
 	using entry_t = std::pair<str_t, str_t>;
 	using map_t = std::array<entry_t, N>;
+	using it_t = typename map_t::const_iterator;
 
 	// Mimic std::map's size functions
 	static constexpr std::size_t size = N;
@@ -28,16 +29,22 @@ public:
 	constexpr explicit static_string_map(const map_t& map) : sorted_map{sort_map(map)} {}
 	constexpr explicit static_string_map(const entry_t (&&entries)[N]) : static_string_map{std::to_array(entries)} {}
 
-	[[nodiscard]] constexpr str_t at(str_t key) const {
-		const typename map_t::const_iterator begin = sorted_map.cbegin();
-		const typename map_t::const_iterator end = sorted_map.end();
+	[[nodiscard]] constexpr std::pair<bool, it_t> find(str_t key) const {
+		const it_t begin = sorted_map.cbegin();
+		const it_t end = sorted_map.end();
 
-		const typename map_t::const_iterator result =
+		const it_t result =
 		    std::lower_bound(begin, end, key, [](const entry_t& a, const std::string_view& b) { return a.first < b; });
 
-		if ((result != end) && (result->first == key)) {
+		return std::make_pair((result != end) && (result->first == key), result);
+	}
+
+	[[nodiscard]] constexpr str_t at(str_t key) const {
+		const std::pair<bool, it_t> search_result = find(key);
+
+		if (search_result.first) [[likely]] {
 			// Found key
-			return result->second;
+			return search_result.second->second;
 		} else {
 			using namespace std::literals::string_literals;
 			// Key not found
@@ -45,7 +52,11 @@ public:
 		}
 	}
 
-	constexpr str_t operator[](str_t key) const {
+	[[nodiscard]] constexpr bool contains(str_t key) const {
+		return find(key).first;
+	}
+
+	[[nodiscard]] constexpr str_t operator[](str_t key) const {
 		return at(key);
 	}
 };

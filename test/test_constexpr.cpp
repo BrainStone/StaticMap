@@ -22,3 +22,21 @@ TEST(TestConstexpr, Access) {
 	EXPECT_EQ(hello, "world");
 	EXPECT_EQ(foo, "bar");
 }
+
+TEST(TestConstexpr, Contains) {
+	constexpr bool hello = map.contains("hello");
+	constexpr bool hi = map.contains("hi");
+
+	EXPECT_TRUE(hello);
+	EXPECT_FALSE(hi);
+}
+
+TEST(TestConstexpr, Find) {
+	constexpr auto hello = map.find("hello");
+	constexpr auto hi = map.find("hi");
+
+	EXPECT_TRUE(hello.first);
+	EXPECT_EQ(hello.second->second, "world");
+
+	EXPECT_FALSE(hi.first);
+}

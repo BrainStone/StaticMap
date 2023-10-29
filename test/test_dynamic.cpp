@@ -16,13 +16,26 @@ TEST(TestDynamic, Initialization) {
 }
 
 TEST(TestDynamic, ValidAccess) {
-	const std::string_view hello = map["hello"];
-	const std::string_view foo = map["foo"];
-
-	EXPECT_EQ(hello, "world");
-	EXPECT_EQ(foo, "bar");
+	EXPECT_EQ(map["hello"], "world");
+	EXPECT_EQ(map["foo"], "bar");
 }
 
 TEST(TestDynamic, InvalidAccess) {
-	EXPECT_THROW(map["hi"], std::out_of_range);
+	// Casting to void to disable the warning about nodiscard
+	EXPECT_THROW((void)map["hi"], std::out_of_range);
+}
+
+TEST(TestDynamic, Contains) {
+	EXPECT_TRUE(map.contains("hello"));
+	EXPECT_FALSE(map.contains("hi"));
+}
+
+TEST(TestDynamic, Find) {
+	const auto hello = map.find("hello");
+	const auto hi = map.find("hi");
+
+	EXPECT_TRUE(hello.first);
+	EXPECT_EQ(hello.second->second, "world");
+
+	EXPECT_FALSE(hi.first);
 }
