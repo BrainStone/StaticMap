@@ -1,5 +1,5 @@
-#ifndef STATIC_MAP__STATIC_MAP_HPP
-#define STATIC_MAP__STATIC_MAP_HPP
+#ifndef STATIC_MAP_STATIC_MAP_HPP
+#define STATIC_MAP_STATIC_MAP_HPP
 
 #include <algorithm>
 #include <array>
@@ -104,12 +104,6 @@ public:
 private:
 	const detail::storage_impl<K, V, N> map;
 
-	static constexpr map_t sort_map(map_t unsorted_map) {
-		std::sort(unsorted_map.begin(), unsorted_map.end());
-
-		return unsorted_map;
-	}
-
 public:
 	constexpr explicit static_map(const map_t& map) : map{map} {}
 	constexpr explicit static_map(const entry_t (&&entries)[N]) : static_map{std::to_array(entries)} {}
@@ -143,4 +137,4 @@ public:
 // Cleanup just in case
 #undef STATIC_MAP_TYPEDEFS
 
-#endif #ifndef STATIC_MAP__STATIC_MAP_HPP
+#endif // #ifndef STATIC_MAP_STATIC_MAP_HPP
