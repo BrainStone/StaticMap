@@ -13,6 +13,9 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 ## testing ####################################################################
 ###############################################################################
 
-enable_testing()
-include(GoogleTest)
-add_subdirectory(test)
+option(BUILD_STATIC_MAP_TESTS "Build static_map tests" ON)
+if (BUILD_STATIC_MAP_TESTS)
+    enable_testing()
+    include(GoogleTest)
+    add_subdirectory(test)
+endif ()
